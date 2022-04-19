@@ -17,6 +17,7 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [isSocketConnected, setIsSocketConnected] = useState(true);
   const [recordAudio, setRecordAudio] = useState({})
+  const [file, setFile] = useState(null)
 
   useEffect(() => {
     if (isRecording) {
@@ -36,12 +37,10 @@ function App() {
             };
             console.log("files: ", files);
             socket.emit('message', files);
+            setFile(files);
+            setIsRecording(false)
           });
         });
-
-
-
-        setIsRecording(false)
 
       }, 3000);
     }
@@ -91,7 +90,12 @@ function App() {
 
       {isRecording ? <p>Recording audio....</p> : null}
       {!isSocketConnected ? <p>Connecting to server....</p> : null}
-
+      
+      <br />
+      <br />
+      <br />
+      { file?.audio?.dataURL ? <audio controls src={file?.audio?.dataURL}></audio> : null}
+      
 
     </div>
   );
